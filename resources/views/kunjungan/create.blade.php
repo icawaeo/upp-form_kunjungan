@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-color: #E0F2F1; /* Warna latar belakang hijau mint */
+            background-color: #e0f2f1;
         }
         .form-container {
             background-color: #FFFFFF;
@@ -27,41 +27,57 @@
             display: block;
         }
         .btn-submit {
-            background-color: #00A99D;
+            background-color: #0a2342;
             color: white;
             padding: 0.75rem 1.5rem;
-            margin-bottom: 1 rem;
             border-radius: 0.5rem;
             font-weight: bold;
             width: 100%;
             text-align: center;
         }
         .file-input-wrapper {
-            display: flex;
+            display: grid;
+            grid-template-columns: auto 1fr;
             align-items: center;
             border: 1px solid #D1D5DB;
             border-radius: 0.5rem;
+            overflow: hidden;
         }
         .file-input-button {
             background-color: #F3F4F6;
             padding: 0.75rem;
             border-right: 1px solid #D1D5DB;
             cursor: pointer;
+            white-space: nowrap; 
         }
         .file-input-text {
             padding: 0.75rem;
             flex-grow: 1;
             color: #6B7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
         }
     </style>
 </head>
+
 <body class="flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-md mx-4 sm:mx-0">
-        <div class="mb-8">
-            <img src="img/logo-pln.png" alt="Logo PLN" class="w-10 mt-5 mb-4">
-            <h1 class="text-2xl font-bold">Selamat Datang di <br> PT PLN (Persero) UPP SULUT</h1>
-            <p class="text-gray-600">Silakan isi formulir dibawah ini!</p>
+    <div class="w-full max-w-md mx-4 sm:mx-0 mt-5 mb-8">
+        <div class="p-4 rounded-lg mb-8" style="background-color: #093e46; background-image: url('{{ asset('img/cover-header.jpg') }}'); background-size: cover; background-position: center;">
+            <div class="flex justify-between items-center bg-[#093e46] rounded-lg p-2">
+            <img src="{{ asset('img/logo-pln.png') }}" alt="Logo PLN" class="w-10 sm:w-20 h-auto flex-shrink-0 mr-3">
+            <div>
+                <h1 style="color: #d6dde6;">
+                    <span class="block text-base font-medium">Selamat Datang di</span>
+                    <span class="block text-xl sm:text-3xl font-bold">PT PLN (Persero) UPP SULUT</span>
+                </h1>
+                <p class="text-[#d1d1d1] text-xs sm:text-sm font-light">Silakan isi formulir dibawah ini!</p>
+            </div>
+            </div>
         </div>
+
+        <h2 class="text-xl font-bold">Form Kunjungan Tamu</h2>
 
         @if (session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -78,11 +94,11 @@
             </div>
             <div>
                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
-                <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-input" required>
+                <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-input" placeholder="Masukkan nama Anda" required>
             </div>
             <div>
                 <label for="alamat" class="form-label">Alamat</label>
-                <textarea id="alamat" name="alamat" rows="3" class="form-textarea" required></textarea>
+                <textarea id="alamat" name="alamat" rows="3" class="form-textarea" placeholder="Masukkan alamat Anda" required></textarea>
             </div>
             <div>
                 <label for="jam_datang" class="form-label">Jam Datang</label>
@@ -94,11 +110,11 @@
             </div>
             <div>
                 <label for="keperluan" class="form-label">Keperluan</label>
-                <input type="text" id="keperluan" name="keperluan" class="form-input" required>
+                <input type="text" id="keperluan" name="keperluan" class="form-input" placeholder="Jelaskan keperluan Anda" required>
             </div>
             <div>
                 <label for="nomor_kendaraan" class="form-label">Nomor Kendaraan</label>
-                <input type="text" id="nomor_kendaraan" name="nomor_kendaraan" class="form-input" required>
+                <input type="text" id="nomor_kendaraan" name="nomor_kendaraan" class="form-input" placeholder="Contoh: DB 1234 AB" required>
             </div>
             <div>
                 <label for="foto" class="form-label">Upload Foto Anda</label>
@@ -119,7 +135,16 @@
 
         fotoUpload.addEventListener('change', function(){
             fileChosen.textContent = this.files[0].name
-        })
+        });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+            const dd = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('tanggal').value = formattedDate;
+        });
     </script>
 </body>
 </html>
