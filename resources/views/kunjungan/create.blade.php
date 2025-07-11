@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Kunjungan Tamu</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #e0f2f1;
-        }
-        .form-container {
-            background-color: #FFFFFF;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            font-family: 'Open Sans', sans-serif;
         }
         .form-input, .form-textarea {
             border-radius: 0.5rem;
@@ -59,62 +57,73 @@
             text-overflow: ellipsis;
             min-width: 0;
         }
+        /* [MODIFIED] Gaya untuk border input yang error */
+        .input-error {
+            border-color: #EF4444; /* Warna merah */
+        }
     </style>
 </head>
 
 <body class="flex items-center justify-center min-h-screen">
     <div class="w-full max-w-md mx-4 sm:mx-0 mt-5 mb-8">
         <div class="p-4 rounded-lg mb-8" style="background-color: #093e46; background-image: url('{{ asset('img/cover-header.jpg') }}'); background-size: cover; background-position: center;">
-            <div class="flex justify-between items-center bg-[#093e46] rounded-lg p-2">
-            <img src="{{ asset('img/logo-pln.png') }}" alt="Logo PLN" class="w-10 sm:w-20 h-auto flex-shrink-0 mr-3">
-            <div>
-                <h1 style="color: #d6dde6;">
-                    <span class="block text-base font-medium">Selamat Datang di</span>
-                    <span class="block text-xl sm:text-3xl font-bold">PT PLN (Persero) UPP SULUT</span>
-                </h1>
-                <p class="text-[#d1d1d1] text-xs sm:text-sm font-light">Silakan isi formulir dibawah ini!</p>
-            </div>
+            <div class="flex justify-between items-center bg-[#093e46] rounded-lg p-5">
+                <img src="{{ asset('img/logo-pln.png') }}" alt="Logo PLN" class="w-10 sm:w-20 h-auto flex-shrink-0 mr-3">
+                <div>
+                    <h1 style="color: #d6dde6;" class="leading-tight">
+                        <span class="block text-[13px] font-regular">Selamat Datang di</span>
+                        <span class="block text-[15px] sm:text-[20px] font-bold">PT PLN (Persero) UPP SULUT</span>
+                        <span class="block text-[10px] font-normal">Jl. Bethesda No. 32, Ranotana, Kec. Sario, Kota Manado, Sulawesi Utara</span>
+                    </h1>
+                </div>
             </div>
         </div>
-
-        <h2 class="text-xl font-bold">Form Kunjungan Tamu</h2>
+        <h2 class="text-xl font-bold mb-3">Form Kunjungan Tamu</h2>
+        <p class="text-gray-700 text-xs sm:text-sm font-light mb-6">Silakan isi formulir dibawah ini!</p>
 
         @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <strong class="font-bold">Sukses!</strong>
-                <span class="block sm:inline">{{ session('success') }}</span>
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+                <p class="font-bold">Sukses!</p>
+                <p>{{ session('success') }}</p>
             </div>
         @endif
 
-        <form action="{{ route('kunjungan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form id="kunjungan-form" action="{{ route('kunjungan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
             @csrf
             <div>
                 <label for="tanggal" class="form-label">Tanggal</label>
                 <input type="date" id="tanggal" name="tanggal" class="form-input" required>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="tanggal-error">Kolom tanggal wajib diisi.</p>
             </div>
             <div>
                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
                 <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-input" placeholder="Masukkan nama Anda" required>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="nama_lengkap-error">Kolom nama lengkap wajib diisi.</p>
             </div>
             <div>
                 <label for="alamat" class="form-label">Alamat</label>
                 <textarea id="alamat" name="alamat" rows="3" class="form-textarea" placeholder="Masukkan alamat Anda" required></textarea>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="alamat-error">Kolom alamat wajib diisi.</p>
             </div>
             <div>
                 <label for="jam_datang" class="form-label">Jam Datang</label>
                 <input type="time" id="jam_datang" name="jam_datang" class="form-input" required>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="jam_datang-error">Kolom jam datang wajib diisi.</p>
             </div>
             <div>
                 <label for="jam_kembali" class="form-label">Jam Kembali</label>
                 <input type="time" id="jam_kembali" name="jam_kembali" class="form-input" required>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="jam_kembali-error">Kolom jam kembali wajib diisi.</p>
             </div>
             <div>
                 <label for="keperluan" class="form-label">Keperluan</label>
                 <input type="text" id="keperluan" name="keperluan" class="form-input" placeholder="Jelaskan keperluan Anda" required>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="keperluan-error">Kolom keperluan wajib diisi.</p>
             </div>
             <div>
                 <label for="nomor_kendaraan" class="form-label">Nomor Kendaraan</label>
                 <input type="text" id="nomor_kendaraan" name="nomor_kendaraan" class="form-input" placeholder="Contoh: DB 1234 AB" required>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="nomor_kendaraan-error">Kolom nomor kendaraan wajib diisi.</p>
             </div>
             <div>
                 <label for="foto" class="form-label">Upload Foto Anda</label>
@@ -123,6 +132,7 @@
                     <span id="file-chosen" class="file-input-text">Belum ada file dipilih</span>
                 </div>
                 <input type="file" id="foto-upload" name="foto" class="hidden" accept="image/*" capture="camera" required>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="foto-upload-error">Anda harus mengunggah foto.</p>
             </div>
 
             <button type="submit" class="btn-submit">Submit</button>
@@ -130,11 +140,52 @@
     </div>
 
     <script>
+        const form = document.getElementById('kunjungan-form');
         const fotoUpload = document.getElementById('foto-upload');
         const fileChosen = document.getElementById('file-chosen');
-
+        
         fotoUpload.addEventListener('change', function(){
-            fileChosen.textContent = this.files[0].name
+            if (this.files.length > 0) {
+                fileChosen.textContent = this.files[0].name;
+                // Sembunyikan error jika user memilih file
+                document.getElementById('foto-upload-error').classList.add('hidden');
+                document.querySelector('.file-input-wrapper').classList.remove('input-error');
+            }
+        });
+
+        // [MODIFIED] Logika validasi baru yang memeriksa setiap kolom
+        form.addEventListener('submit', function(event) {
+            let isValid = true;
+            
+            // Sembunyikan semua pesan error & hapus border merah sebelum validasi ulang
+            form.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
+            form.querySelectorAll('.form-input, .form-textarea, .file-input-wrapper').forEach(el => el.classList.remove('input-error'));
+
+            // Validasi semua input yang punya atribut 'required'
+            const requiredFields = form.querySelectorAll('[required]');
+            requiredFields.forEach(field => {
+                const isFile = field.type === 'file';
+                const errorElement = document.getElementById(field.id + '-error');
+
+                if ((isFile && field.files.length === 0) || (!isFile && !field.value.trim())) {
+                    isValid = false;
+                    if (errorElement) {
+                        errorElement.classList.remove('hidden');
+                    }
+                    // Tambahkan border merah ke input atau wrapper-nya
+                    const fieldWrapper = isFile ? field.previousElementSibling : field;
+                    fieldWrapper.classList.add('input-error');
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Hentikan pengiriman jika ada error
+                // Scroll ke error pertama yang ditemukan
+                const firstError = form.querySelector('.input-error');
+                if(firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
         });
 
         document.addEventListener('DOMContentLoaded', (event) => {
