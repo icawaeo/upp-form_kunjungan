@@ -38,18 +38,26 @@ class KunjunganController extends Controller
 
     public function index(Request $request)
     {
-        $query = Kunjungan::query();
+        // Tentukan tanggal target. Default ke hari ini jika tidak ada input.
+        $targetDate = $request->input('tanggal') ?: now()->format('Y-m-d');
 
-        if ($request->has('nama_lengkap') && $request->nama_lengkap != '') {
-            $query->where('nama_lengkap', 'like', '%' . $request->nama_lengkap . '%');
+        // Hitung total pengunjung untuk tanggal target.
+        $visitorCount = Kunjungan::whereDate('tanggal', $targetDate)->count();
+
+        // Query untuk tabel, sudah difilter berdasarkan tanggal.
+        $kunjungansQuery = Kunjungan::query()->whereDate('tanggal', $targetDate);
+
+        // Terapkan filter nama jika ada.
+        if ($request->filled('nama_lengkap')) {
+            $kunjungansQuery->where('nama_lengkap', 'like', '%' . $request->nama_lengkap . '%');
         }
 
-        if ($request->has('tanggal') && $request->tanggal != '') {
-            $query->whereDate('tanggal', $request->tanggal);
-        }
+        // Ambil data dengan paginasi dan pastikan parameter filter tetap ada di link pagination.
+        $kunjungans = $kunjungansQuery->latest()->paginate(10)->withQueryString();
 
-        $kunjungans = $query->latest()->paginate(10);
+        // Format tanggal untuk ditampilkan di view.
+        $displayDate = \Carbon\Carbon::parse($targetDate)->translatedFormat('d F Y');
 
-        return view('admin.kunjungan.index', compact('kunjungans'));
+        return view('admin.kunjungan.index', compact('kunjungans', 'visitorCount', 'displayDate'));
     }
 }
