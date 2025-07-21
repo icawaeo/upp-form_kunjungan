@@ -41,7 +41,7 @@
                     </span>
                     </a>
 
-                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-800">
+                    <a href="{{ route('admin.kunjungan.report') }}" class="text-sm font-medium text-gray-500 hover:text-gray-800">
                         <span class="pb-1">Laporan Tamu</span>
                     </a>
                     
@@ -77,7 +77,7 @@
                 Dashboard
             </a>
 
-            <a href="#" 
+            <a href="{{ route('admin.kunjungan.report') }}" 
             class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
                 Laporan Tamu
             </a>
