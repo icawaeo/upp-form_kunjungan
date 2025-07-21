@@ -40,10 +40,14 @@
                         class="text-sm font-bold {{ request()->routeIs('admin.kunjungan.report') ? 'text-gray-900' : 'text-gray-500 hover:text-gray-800' }}">
                         <span class="pb-1 {{ request()->routeIs('admin.kunjungan.report') ? 'border-b-2 border-blue-600' : '' }}">Laporan Tamu</span>
                     </a>
-                    <a href="#" 
+                    <a href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); if(confirm('Anda yakin ingin logout?')) { document.getElementById('logout-form-desktop').submit(); }"
                         class="text-sm font-medium text-gray-500 hover:text-gray-800">
-                        <span class="pb-1">Logout</span>
+                            <span class="pb-1">Logout</span>
                     </a>
+                    <form id="logout-form-desktop" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
             </div>
 
@@ -73,9 +77,14 @@
                       {{ request()->routeIs('admin.kunjungan.report') ? 'bg-blue-50 border-l-4 border-blue-600 text-blue-700' : 'border-l-4 border-transparent text-gray-600 hover:bg-gray-200' }}">
                 Laporan Tamu
             </a>
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
+            <a href="{{ route('logout') }}"
+                onclick="event.preventDefault(); if(confirm('Anda yakin ingin logout?')) { document.getElementById('logout-form-mobile').submit(); }"
+                class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
                 Logout
             </a>
+            <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </div>
     </div>
 </nav>
