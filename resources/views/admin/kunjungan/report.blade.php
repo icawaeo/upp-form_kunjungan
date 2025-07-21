@@ -129,31 +129,31 @@
             <table class="w-full leading-normal">
                 <thead>
                     <tr>
-                        <th class="px-3 py-3 border-b-2 border-gray-200 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-3 py-3 border-b-2 border-gray-200 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Nama & Alamat</th>
-                        <th class="px-3 py-3 border-b-2 border-gray-200 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Jam</th>
-                        <th class="px-3 py-3 border-b-2 border-gray-200 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Keperluan</th>
-                        <th class="px-3 py-3 border-b-2 border-gray-200 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">No. Kendaraan</th>
+                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Tanggal</th>
+                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Nama & Alamat</th>
+                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Jam</th>
+                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Keperluan</th>
+                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">No. Kendaraan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($kunjungans as $kunjungan)
                     <tr class="hover:bg-gray-50">
-                        <td class="px-3 py-4 border-b border-gray-200 bg-white text-sm">
+                        <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ \Carbon\Carbon::parse($kunjungan->tanggal)->format('d/m/Y') }}</p>
                         </td>
-                        <td class="px-3 py-4 border-b border-gray-200 bg-white text-sm">
+                        <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm">
                             <p class="text-gray-900 font-bold whitespace-no-wrap">{{ $kunjungan->nama_lengkap }}</p>
                             <p class="text-gray-600">{{ $kunjungan->alamat }}</p>
                         </td>
-                        <td class="px-3 py-4 border-b border-gray-200 bg-white text-sm">
+                        <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm sm:whitespace-nowrap">
                             <p class="text-gray-800">Datang: {{ \Carbon\Carbon::parse($kunjungan->jam_datang)->format('H:i') }}</p>
                             <p class="text-gray-800">Pulang: {{ \Carbon\Carbon::parse($kunjungan->jam_kembali)->format('H:i') }}</p>
                         </td>
-                        <td class="px-3 py-4 border-b border-gray-200 bg-white text-sm">
+                        <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm">
                             <p class="text-gray-900">{{ $kunjungan->keperluan }}</p>
                         </td>
-                        <td class="px-3 py-4 border-b border-gray-200 bg-white text-sm">
+                        <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm sm:whitespace-nowrap">
                             <p class="text-gray-900">{{ $kunjungan->nomor_kendaraan }}</p>
                         </td>
                     </tr>
@@ -172,7 +172,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- Logika untuk filter harian/bulanan ---
         const filterTypeSelect = document.getElementById('filter_type');
         const dateFilter = document.getElementById('date-filter');
         const monthFilter = document.getElementById('month-filter');
@@ -188,9 +187,8 @@
         }
 
         filterTypeSelect.addEventListener('change', toggleFilterInputs);
-        toggleFilterInputs(); // Panggil saat halaman dimuat
+        toggleFilterInputs();
 
-        // --- Logika untuk tombol menu mobile ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         const openIcon = mobileMenuButton.querySelector('svg:first-child');

@@ -5,8 +5,22 @@
     <title>{{ $title }}</title>
     <style>
         body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; color: #333; }
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
-        .header img { width: 80px; float: left; margin-right: 20px;}
+        .header { 
+            margin-bottom: 20px; 
+            padding-bottom: 10px;
+            text-align: left;
+            border-bottom: 2px solid #333; 
+            overflow: auto; 
+        }
+        .header img { 
+            float: left; 
+            margin-right: 15px;
+            height: 50px; 
+            width: auto;
+        }
+        .header .header-text {
+            overflow: hidden; 
+        }
         .header .title { font-size: 18px; font-weight: bold; }
         .header .subtitle { font-size: 14px; }
         .header .address { font-size: 10px; }
@@ -24,10 +38,12 @@
 
     <div class="header">
         <img src="{{ public_path('img/logo-pln.png') }}" alt="Logo PLN">
-        <div class="title">PT PLN (PERSERO)</div>
-        <div class="subtitle">UNIT INDUK PEMBANGUNAN SULAWESI</div>
-        <div class="subtitle">UNIT PELAKSANA PROYEK SULAWESI UTARA</div>
-        <div class="address">Jl. Bethesda No. 32, Ranotana, Kec. Sario, Kota Manado, Sulawesi Utara</div>
+        <div class="header-text">
+            <div class="title">PT PLN (PERSERO)</div>
+            <div class="subtitle">UNIT INDUK PEMBANGUNAN SULAWESI</div>
+            <div class="subtitle">UNIT PELAKSANA PROYEK SULAWESI UTARA</div>
+            <div class="address">Jl. Bethesda No. 32, Ranotana, Kec. Sario, Kota Manado, Sulawesi Utara</div>
+        </div>
     </div>
 
     <div class="content">
@@ -69,7 +85,7 @@
     </div>
 
     <div class="footer">
-        Dicetak pada: {{ now()->translatedFormat('d F Y, H:i') }}
+        Dicetak pada: {{ now()->timezone('Asia/Makassar')->translatedFormat('d F Y, H:i') }}
         <div class="page-number"></div>
     </div>
 

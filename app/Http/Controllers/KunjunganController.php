@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kunjungan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use PDF; 
 
 class KunjunganController extends Controller
