@@ -11,13 +11,13 @@
     <style>
         body { font-family: 'Open Sans', sans-serif; }
         .modal { transition: opacity 0.25s ease; }
-        .modal-content { transition: transform 0.25s ease; }
+        /* [MODIFIED] Menambahkan transisi untuk modal-content */
+        .modal-content { transition: transform 0.25s ease, opacity 0.25s ease; }
     </style>
 </head>
 <body class="bg-gray-100">
 
 <nav class="bg-white shadow-md sticky top-0 z-50">
-    {{-- Kode Navbar tidak berubah --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
             <div class="flex-shrink-0">
@@ -35,10 +35,9 @@
                     <a href="{{ route('admin.kunjungan.index') }}" class="text-sm font-medium text-gray-500 hover:text-gray-800"><span class="pb-1">Dashboard</span></a>
                     <a href="{{ route('admin.kunjungan.report') }}" class="text-sm font-medium text-gray-500 hover:text-gray-800"><span class="pb-1">Laporan Tamu</span></a>
                     <a href="{{ route('admin.user.index') }}" class="text-sm font-bold text-gray-900"><span class="pb-1 border-b-2 border-blue-600">Daftar Admin</span></a>
-                    <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); if(confirm('Anda yakin ingin logout?')) { document.getElementById('logout-form-desktop').submit(); }"
-                        class="text-sm font-medium text-gray-500 hover:text-gray-800"><span class="pb-1">Logout</span></a>
-                    <form id="logout-form-desktop" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
+                    {{-- [MODIFIED] Tombol Logout diubah untuk memanggil modal --}}
+                    <a href="#" id="logout-button-desktop" class="text-sm font-medium text-gray-500 hover:text-gray-800"><span class="pb-1">Logout</span></a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
                 </div>
             </div>
             <div class="-mr-2 flex md:hidden">
@@ -55,8 +54,8 @@
             <a href="{{ route('admin.kunjungan.index') }}" class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">Dashboard</a>
             <a href="{{ route('admin.kunjungan.report') }}" class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">Laporan Tamu</a>
             <a href="{{ route('admin.user.index') }}" class="block rounded-md px-3 py-2 text-base font-medium bg-blue-50 border-l-4 border-blue-600 text-blue-700">Daftar Admin</a>
-            <a href="{{ route('logout') }}" onclick="event.preventDefault(); if(confirm('Anda yakin ingin logout?')) { document.getElementById('logout-form-mobile').submit(); }" class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">Logout</a>
-            <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
+            {{-- [MODIFIED] Tombol Logout diubah untuk memanggil modal --}}
+            <a href="#" id="logout-button-mobile" class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">Logout</a>
         </div>
     </div>
 </nav>
@@ -64,8 +63,6 @@
 <div class="w-full px-4 sm:px-8">
     <div class="py-8">
         
-        {{-- [MODIFIED] Bagian ini diubah untuk mengatur posisi tombol --}}
-        {{-- highlight-start --}}
         <div class="mb-4">
             <h2 class="text-2xl font-bold leading-tight text-gray-800">Daftar Admin</h2>
             <p class="mt-2 text-sm text-gray-600">Daftar semua admin yang terdaftar.</p>
@@ -76,7 +73,6 @@
                 + Tambah Admin
             </button>
         </div>
-        {{-- highlight-end --}}
 
         @if (session('success'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
@@ -128,10 +124,10 @@
     </div>
 </div>
 
-<div id="user-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden opacity-0 z-50">
+<div id="user-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden opacity-0 z-[60]">
     <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-md p-6 transform -translate-y-10">
         <div class="flex justify-between items-center mb-4">
-            <h3 id="modal-title" class="text-xl font-bold">Tambah Admin Baru</h3>
+            <h3 id="modal-title" class="text-xl font-semibold">Tambah Admin Baru</h3>
             <button id="close-modal-button" class="text-gray-500 hover:text-gray-800">&times;</button>
         </div>
         <form id="user-form" method="POST">
@@ -164,80 +160,134 @@
     </div>
 </div>
 
+<div id="logout-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden opacity-0 z-[60]">
+    <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-sm p-6 text-center transform scale-95 opacity-0">
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Konfirmasi Logout</h3>
+        <p class="text-sm text-gray-600 mb-6">Apakah Anda yakin ingin keluar dari sesi ini?</p>
+        <div class="flex justify-center gap-4">
+            <button id="cancel-logout-button" class="py-2 px-6 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300">Batal</button>
+            <button id="confirm-logout-button" class="py-2 px-6 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700">Ya, Logout</button>
+        </div>
+    </div>
+</div>
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        if(mobileMenuButton) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-        const modal = document.getElementById('user-modal');
-        const modalContent = modal.querySelector('.modal-content');
-        const addUserButton = document.getElementById('add-user-button');
-        const closeModalButton = document.getElementById('close-modal-button');
-        const cancelButton = document.getElementById('cancel-button');
-        const editUserButtons = document.querySelectorAll('.edit-user-button');
-        const form = document.getElementById('user-form');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMethod = document.getElementById('modal-method');
-        const passwordInput = document.getElementById('password');
-        const passwordHint = document.getElementById('password-hint');
-        const openModal = () => {
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modalContent.classList.remove('-translate-y-10');
-            }, 10);
-        };
-        const closeModal = () => {
-            modalContent.classList.add('-translate-y-10');
-            modal.classList.add('opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 250);
-        };
-        const setupAddForm = () => {
-            form.action = "{{ route('admin.user.store') }}";
-            modalTitle.textContent = 'Tambah Admin Baru';
-            modalMethod.innerHTML = '';
-            form.reset();
-            passwordInput.setAttribute('required', 'required');
-            passwordHint.classList.add('hidden');
-            openModal();
-        };
-        const setupEditForm = (user) => {
-            form.action = `/admin/user/${user.id}`;
-            modalTitle.textContent = 'Edit Admin';
-            modalMethod.innerHTML = `<input type="hidden" name="_method" value="PUT">`;
-            form.querySelector('#name').value = user.name;
-            form.querySelector('#email').value = user.email;
-            passwordInput.removeAttribute('required');
-            passwordHint.classList.remove('hidden');
-            openModal();
-        };
-        addUserButton.addEventListener('click', setupAddForm);
-        editUserButtons.forEach(button => {
-            button.addEventListener('click', async () => {
-                const userId = button.dataset.id;
-                try {
-                    const response = await fetch(`/admin/user/${userId}/edit`);
-                    if (!response.ok) throw new Error('Gagal mengambil data user');
-                    const user = await response.json();
-                    setupEditForm(user);
-                } catch (error) {
-                    console.error(error);
-                    alert(error.message);
-                }
-            });
+document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if(mobileMenuButton) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
-        closeModalButton.addEventListener('click', closeModal);
-        cancelButton.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
+    }
+
+    const userModal = document.getElementById('user-modal');
+    const userModalContent = userModal.querySelector('.modal-content');
+    const addUserButton = document.getElementById('add-user-button');
+    const closeModalButton = document.getElementById('close-modal-button');
+    const cancelButton = document.getElementById('cancel-button');
+    const editUserButtons = document.querySelectorAll('.edit-user-button');
+    const userForm = document.getElementById('user-form');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMethod = document.getElementById('modal-method');
+    const passwordInput = document.getElementById('password');
+    const passwordHint = document.getElementById('password-hint');
+
+    const openUserModal = () => {
+        userModal.classList.remove('hidden');
+        setTimeout(() => {
+            userModal.classList.remove('opacity-0');
+            userModalContent.classList.remove('-translate-y-10');
+        }, 10);
+    };
+    const closeUserModal = () => {
+        userModalContent.classList.add('-translate-y-10');
+        userModal.classList.add('opacity-0');
+        setTimeout(() => userModal.classList.add('hidden'), 250);
+    };
+    const setupAddForm = () => {
+        userForm.action = "{{ route('admin.user.store') }}";
+        modalTitle.textContent = 'Tambah Admin Baru';
+        modalMethod.innerHTML = '';
+        userForm.reset();
+        passwordInput.setAttribute('required', 'required');
+        passwordHint.classList.add('hidden');
+        openUserModal();
+    };
+    const setupEditForm = (user) => {
+        userForm.action = `/admin/user/${user.id}`;
+        modalTitle.textContent = 'Edit Admin';
+        modalMethod.innerHTML = `<input type="hidden" name="_method" value="PUT">`;
+        userForm.querySelector('#name').value = user.name;
+        userForm.querySelector('#email').value = user.email;
+        passwordInput.removeAttribute('required');
+        passwordHint.classList.remove('hidden');
+        openUserModal();
+    };
+    
+    addUserButton.addEventListener('click', setupAddForm);
+    editUserButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const userId = button.dataset.id;
+            try {
+                const response = await fetch(`/admin/user/${userId}/edit`);
+                if (!response.ok) throw new Error('Gagal mengambil data user');
+                const user = await response.json();
+                setupEditForm(user);
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
             }
         });
     });
+    
+    closeModalButton.addEventListener('click', closeUserModal);
+    cancelButton.addEventListener('click', closeUserModal);
+    userModal.addEventListener('click', (e) => {
+        if (e.target === userModal) {
+            closeUserModal();
+        }
+    });
+
+    const logoutModal = document.getElementById('logout-modal');
+    const logoutModalContent = logoutModal.querySelector('.modal-content');
+    const logoutButtonDesktop = document.getElementById('logout-button-desktop');
+    const logoutButtonMobile = document.getElementById('logout-button-mobile');
+    const cancelLogoutButton = document.getElementById('cancel-logout-button');
+    const confirmLogoutButton = document.getElementById('confirm-logout-button');
+    const logoutForm = document.getElementById('logout-form');
+
+    const openLogoutModal = (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+        setTimeout(() => {
+            logoutModal.classList.remove('opacity-0');
+            logoutModalContent.classList.remove('scale-95', 'opacity-0');
+            logoutModalContent.classList.add('scale-100');
+        }, 10);
+    };
+    
+    const closeLogoutModal = () => {
+        logoutModalContent.classList.add('scale-95', 'opacity-0');
+        logoutModal.classList.add('opacity-0');
+        setTimeout(() => logoutModal.classList.add('hidden'), 250);
+    };
+
+    if (logoutButtonDesktop) logoutButtonDesktop.addEventListener('click', openLogoutModal);
+    if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', openLogoutModal);
+    
+    if (cancelLogoutButton) cancelLogoutButton.addEventListener('click', closeLogoutModal);
+    if (confirmLogoutButton) confirmLogoutButton.addEventListener('click', () => {
+        logoutForm.submit();
+    });
+
+    if (logoutModal) logoutModal.addEventListener('click', (e) => {
+        if (e.target === logoutModal) {
+            closeLogoutModal();
+        }
+    });
+});
 </script>
 
 </body>

@@ -12,6 +12,9 @@
         body {
             font-family: 'Open Sans', sans-serif;
         }
+        /* [MODIFIED] Menambahkan style untuk transisi modal */
+        .modal { transition: opacity 0.25s ease; }
+        .modal-content { transition: transform 0.25s ease, opacity 0.25s ease; }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -43,12 +46,11 @@
                     <a href="{{ route('admin.user.index') }}" class="text-sm font-medium text-gray-500 hover:text-gray-800">
                         <span class="pb-1">Daftar Admin</span>
                     </a>
-                    <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); if(confirm('Anda yakin ingin logout?')) { document.getElementById('logout-form-desktop').submit(); }"
-                        class="text-sm font-medium text-gray-500 hover:text-gray-800">
-                            <span class="pb-1">Logout</span>
+                    {{-- [MODIFIED] Tombol Logout diubah untuk memanggil modal --}}
+                    <a href="#" id="logout-button-desktop" class="text-sm font-medium text-gray-500 hover:text-gray-800">
+                        <span class="pb-1">Logout</span>
                     </a>
-                    <form id="logout-form-desktop" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                 </div>
@@ -72,26 +74,23 @@
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <a href="{{ route('admin.kunjungan.index') }}" 
                class="block rounded-md px-3 py-2 text-base font-medium 
-                      {{ request()->routeIs('admin.kunjungan.index') ? 'bg-blue-50 border-l-4 border-blue-600 text-blue-700' : 'border-l-4 border-transparent text-gray-600 hover:bg-gray-200' }}">
+                     {{ request()->routeIs('admin.kunjungan.index') ? 'bg-blue-50 border-l-4 border-blue-600 text-blue-700' : 'border-l-4 border-transparent text-gray-600 hover:bg-gray-200' }}">
                 Dashboard
             </a>
             <a href="{{ route('admin.kunjungan.report') }}" 
                class="block rounded-md px-3 py-2 text-base font-medium 
-                      {{ request()->routeIs('admin.kunjungan.report') ? 'bg-blue-50 border-l-4 border-blue-600 text-blue-700' : 'border-l-4 border-transparent text-gray-600 hover:bg-gray-200' }}">
+                     {{ request()->routeIs('admin.kunjungan.report') ? 'bg-blue-50 border-l-4 border-blue-600 text-blue-700' : 'border-l-4 border-transparent text-gray-600 hover:bg-gray-200' }}">
                 Laporan Tamu
             </a>
             <a href="{{ route('admin.user.index') }}"
-                class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
+               class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
                 Daftar Admin
             </a>
-            <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); if(confirm('Anda yakin ingin logout?')) { document.getElementById('logout-form-mobile').submit(); }"
-                class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
+            {{-- [MODIFIED] Tombol Logout diubah untuk memanggil modal --}}
+            <a href="#" id="logout-button-mobile"
+               class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
                 Logout
             </a>
-            <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
         </div>
     </div>
 </nav>
@@ -186,36 +185,86 @@
     </div>
 </div>
 
+<div id="logout-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden opacity-0 z-[60]">
+    <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-sm p-6 text-center transform scale-95 opacity-0">
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Konfirmasi Logout</h3>
+        <p class="text-sm text-gray-600 mb-6">Apakah Anda yakin ingin keluar dari sesi ini?</p>
+        <div class="flex justify-center gap-4">
+            <button id="cancel-logout-button" class="py-2 px-6 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300">Batal</button>
+            <button id="confirm-logout-button" class="py-2 px-6 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700">Ya, Logout</button>
+        </div>
+    </div>
+</div>
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const filterTypeSelect = document.getElementById('filter_type');
-        const dateFilter = document.getElementById('date-filter');
-        const monthFilter = document.getElementById('month-filter');
+document.addEventListener('DOMContentLoaded', function () {
+    const filterTypeSelect = document.getElementById('filter_type');
+    const dateFilter = document.getElementById('date-filter');
+    const monthFilter = document.getElementById('month-filter');
 
-        function toggleFilterInputs() {
-            if (filterTypeSelect.value === 'harian') {
-                dateFilter.classList.remove('hidden');
-                monthFilter.classList.add('hidden');
-            } else {
-                dateFilter.classList.add('hidden');
-                monthFilter.classList.remove('hidden');
-            }
+    function toggleFilterInputs() {
+        if (filterTypeSelect.value === 'harian') {
+            dateFilter.classList.remove('hidden');
+            monthFilter.classList.add('hidden');
+        } else {
+            dateFilter.classList.add('hidden');
+            monthFilter.classList.remove('hidden');
         }
+    }
 
-        filterTypeSelect.addEventListener('change', toggleFilterInputs);
-        toggleFilterInputs();
+    filterTypeSelect.addEventListener('change', toggleFilterInputs);
+    toggleFilterInputs();
 
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const openIcon = mobileMenuButton.querySelector('svg:first-child');
-        const closeIcon = mobileMenuButton.querySelector('svg:last-child');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const openIcon = mobileMenuButton.querySelector('svg:first-child');
+    const closeIcon = mobileMenuButton.querySelector('svg:last-child');
 
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            openIcon.classList.toggle('hidden');
-            closeIcon.classList.toggle('hidden');
-        });
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        openIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
     });
+
+    const logoutModal = document.getElementById('logout-modal');
+    const logoutModalContent = logoutModal.querySelector('.modal-content');
+    const logoutButtonDesktop = document.getElementById('logout-button-desktop');
+    const logoutButtonMobile = document.getElementById('logout-button-mobile');
+    const cancelLogoutButton = document.getElementById('cancel-logout-button');
+    const confirmLogoutButton = document.getElementById('confirm-logout-button');
+    const logoutForm = document.getElementById('logout-form');
+
+    const openLogoutModal = (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+        setTimeout(() => {
+            logoutModal.classList.remove('opacity-0');
+            logoutModalContent.classList.remove('scale-95', 'opacity-0');
+            logoutModalContent.classList.add('scale-100');
+        }, 10);
+    };
+    
+    const closeLogoutModal = () => {
+        logoutModalContent.classList.add('scale-95', 'opacity-0');
+        logoutModal.classList.add('opacity-0');
+        setTimeout(() => logoutModal.classList.add('hidden'), 250);
+    };
+
+    if (logoutButtonDesktop) logoutButtonDesktop.addEventListener('click', openLogoutModal);
+    if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', openLogoutModal);
+    
+    if (cancelLogoutButton) cancelLogoutButton.addEventListener('click', closeLogoutModal);
+    if (confirmLogoutButton) confirmLogoutButton.addEventListener('click', () => {
+        logoutForm.submit();
+    });
+
+    if (logoutModal) logoutModal.addEventListener('click', (e) => {
+        if (e.target === logoutModal) {
+            closeLogoutModal();
+        }
+    });
+});
 </script>
 
 </body>
