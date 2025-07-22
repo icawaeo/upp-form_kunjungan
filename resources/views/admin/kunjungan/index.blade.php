@@ -44,7 +44,11 @@
                     <a href="{{ route('admin.kunjungan.report') }}" class="text-sm font-medium text-gray-500 hover:text-gray-800">
                         <span class="pb-1">Laporan Tamu</span>
                     </a>
-                    
+
+                    <a href="{{ route('admin.user.index') }}" class="text-sm font-medium text-gray-500 hover:text-gray-800">
+                        <span class="pb-1">Daftar Admin</span>
+                    </a>
+
                     <a href="{{ route('logout') }}"
                         onclick="event.preventDefault(); if(confirm('Anda yakin ingin logout?')) { document.getElementById('logout-form-desktop').submit(); }"
                         class="text-sm font-medium text-gray-500 hover:text-gray-800">
@@ -87,6 +91,11 @@
                 Laporan Tamu
             </a>
             
+            <a href="{{ route('admin.user.index') }}"
+                class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
+                Daftar Admin
+            </a>
+
             <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); if(confirm('Anda yakin ingin logout?')) { document.getElementById('logout-form-mobile').submit(); }"
                 class="block rounded-md px-3 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-200">
