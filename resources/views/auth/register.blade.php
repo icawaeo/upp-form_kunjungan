@@ -61,5 +61,5 @@
 
 @section('navigation-link')
     Sudah punya akun?
-    <a href="{{ route('login') }}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Login di sini</a>
+    <a href="{{ route('login') }}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Masuk</a>
 @endsection

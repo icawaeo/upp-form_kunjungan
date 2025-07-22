@@ -37,5 +37,5 @@
 
 @section('navigation-link')
     Belum punya akun?
-    <a href="{{ route('register') }}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Mulai dari sini</a>
+    <a href="{{ route('register') }}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Daftar</a>
 @endsection
