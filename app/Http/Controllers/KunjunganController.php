@@ -6,6 +6,7 @@ use App\Models\Kunjungan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use PDF; 
+use Illuminate\Support\Facades\Storage;
 
 class KunjunganController extends Controller
 {
@@ -109,5 +110,16 @@ class KunjunganController extends Controller
         $fileName = 'laporan-kunjungan-' . Str::slug($period) . '.pdf';
         
         return $pdf->stream($fileName); 
+    }
+
+    public function destroy(Kunjungan $kunjungan)
+    {
+        if ($kunjungan->foto) {
+            Storage::delete('public/' . $kunjungan->foto);
+        }
+
+        $kunjungan->delete();
+
+        return redirect()->back()->with('success', 'Data kunjungan berhasil dihapus.');
     }
 }

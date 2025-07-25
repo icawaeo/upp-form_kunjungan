@@ -185,6 +185,9 @@
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-center text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">
                             Foto
                         </th>
+                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Aksi
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -208,6 +211,13 @@
                             <button type="button" class="photo-modal-trigger mx-auto">
                                 <img src="{{ asset('storage/' . $kunjungan->foto) }}" alt="Foto Tamu" class="w-10 h-10 object-cover rounded-md transition-transform duration-300 hover:scale-110" data-full-src="{{ asset('storage/' . $kunjungan->foto) }}">
                             </button>
+                        </td>
+                        <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-sm">
+                            <form action="{{ route('admin.kunjungan.destroy', $kunjungan->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
+                            </form>
                         </td>
                     </tr>
                     @empty

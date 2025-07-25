@@ -149,6 +149,9 @@
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Jam</th>
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Keperluan</th>
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">No. Kendaraan</th>
+                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Aksi
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -170,6 +173,13 @@
                         </td>
                         <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm sm:whitespace-nowrap">
                             <p class="text-gray-900">{{ $kunjungan->nomor_kendaraan }}</p>
+                        </td>
+                        <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-sm">
+                            <form action="{{ route('admin.kunjungan.destroy', $kunjungan->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
+                            </form>
                         </td>
                     </tr>
                     @empty
