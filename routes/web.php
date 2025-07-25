@@ -16,7 +16,7 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+    Route::get('/dashboard', [KunjunganController::class, 'index'])->name('kunjungan.index');
     Route::get('/kunjungan/laporan', [KunjunganController::class, 'report'])->name('kunjungan.report');
     Route::get('/kunjungan/cetak_pdf', [KunjunganController::class, 'cetakPdf'])->name('kunjungan.cetak_pdf');
     Route::delete('/kunjungan/{kunjungan}', [KunjunganController::class, 'destroy'])->name('kunjungan.destroy');

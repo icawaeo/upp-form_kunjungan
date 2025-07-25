@@ -41,21 +41,36 @@ class KunjunganController extends Controller
 
     public function index(Request $request)
     {
-        $targetDate = $request->input('tanggal') ?: now()->format('Y-m-d');
+        $query = Kunjungan::query();
+        $filterType = $request->get('filter_type', 'harian');
+        $date = $request->get('date');
+        $month = $request->get('month');
+        $namaLengkap = $request->get('nama_lengkap');
 
-        $visitorCount = Kunjungan::whereDate('tanggal', $targetDate)->count();
-
-        $kunjungansQuery = Kunjungan::query()->whereDate('tanggal', $targetDate);
-
-        if ($request->filled('nama_lengkap')) {
-            $kunjungansQuery->where('nama_lengkap', 'like', '%' . $request->nama_lengkap . '%');
+        if ($filterType == 'harian') {
+            $targetDate = $date ?: now()->format('Y-m-d');
+            $query->whereDate('tanggal', $targetDate);
+            $displayDate = \Carbon\Carbon::parse($targetDate)->translatedFormat('d F Y');
+        } elseif ($filterType == 'bulanan') {
+            $targetMonth = $month ?: now()->format('Y-m');
+            $query->whereYear('tanggal', \Carbon\Carbon::parse($targetMonth)->year)
+                  ->whereMonth('tanggal', \Carbon\Carbon::parse($targetMonth)->month);
+            $displayDate = \Carbon\Carbon::parse($targetMonth)->translatedFormat('F Y');
+        } else {
+            $targetDate = now()->format('Y-m-d');
+            $query->whereDate('tanggal', $targetDate);
+            $displayDate = \Carbon\Carbon::parse($targetDate)->translatedFormat('d F Y');
+        }
+        
+        $visitorCount = $query->count();
+        
+        if ($namaLengkap) {
+            $query->where('nama_lengkap', 'like', '%' . $namaLengkap . '%');
         }
 
-        $kunjungans = $kunjungansQuery->latest()->paginate(10)->withQueryString();
+        $kunjungans = $query->latest()->paginate(10)->withQueryString();
 
-        $displayDate = \Carbon\Carbon::parse($targetDate)->translatedFormat('d F Y');
-
-        return view('admin.kunjungan.index', compact('kunjungans', 'visitorCount', 'displayDate'));
+        return view('admin.kunjungan.index', compact('kunjungans', 'visitorCount', 'displayDate', 'filterType', 'date', 'month', 'namaLengkap'));
     }
 
     public function report(Request $request)

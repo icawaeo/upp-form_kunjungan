@@ -124,24 +124,33 @@
 
         <div class="mb-4">
             <h2 class="text-2xl font-bold leading-tight text-gray-800">Detail Kunjungan Tamu</h2>
-            <p class="mt-2 text-sm text-gray-600">Menampilkan daftar kunjungan untuk tanggal {{ $displayDate }}.</p>
+            <p class="mt-2 text-sm text-gray-600">Menampilkan daftar kunjungan {{ $displayDate }}.</p>
         </div>
         
         <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-6">
             <form method="GET" action="{{ route('admin.kunjungan.index') }}">
                 <label class="block font-semibold text-gray-700 mb-3">Filter Data</label>
-                
-                <div class="flex flex-row gap-4 mb-3"> 
-                    <div class="flex-1">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-3">
+                    <div>
+                        <select name="filter_type" id="filter_type" class="appearance-none rounded-lg border border-gray-300 block px-4 py-2 w-full bg-white text-sm text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <option value="harian" {{ ($filterType ?? 'harian') == 'harian' ? 'selected' : '' }}>Harian</option>
+                            <option value="bulanan" {{ ($filterType ?? '') == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
+                        </select>
+                    </div>
+
+                    <div id="date-filter">
+                        <input type="date" name="date" class="appearance-none rounded-lg border border-gray-300 block px-4 py-2 w-full bg-white text-sm text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400" value="{{ $date ?? now()->format('Y-m-d') }}">
+                    </div>
+
+                    <div class="hidden" id="month-filter">
+                        <input type="month" name="month" class="appearance-none rounded-lg border border-gray-300 block px-4 py-2 w-full bg-white text-sm text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400" value="{{ $month ?? now()->format('Y-m') }}">
+                    </div>
+
+                    {{-- <div>
                         <input placeholder="Cari nama..." name="nama_lengkap"
-                               class="appearance-none rounded-lg border border-gray-300 block px-4 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                               value="{{ request('nama_lengkap') }}" />
-                    </div>
-                    <div class="flex-1">
-                        <input type="date" name="tanggal"
-                               class="appearance-none rounded-lg border border-gray-300 block px-4 py-2 w-full bg-white text-sm text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                               value="{{ request('tanggal', now()->format('Y-m-d')) }}" />
-                    </div>
+                            class="appearance-none rounded-lg border border-gray-300 block px-4 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            value="{{ $namaLengkap ?? '' }}" />
+                    </div> --}}
                 </div>
 
                 <div class="flex gap-3">
@@ -153,7 +162,7 @@
                         Cari
                     </button>
                     <a href="{{ route('admin.kunjungan.index') }}"
-                       class="h-9 px-4 flex items-center bg-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 text-sm whitespace-nowrap">
+                    class="h-9 px-4 flex items-center bg-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 text-sm whitespace-nowrap">
                         Reset Filter
                     </a>
                 </div>
@@ -209,7 +218,7 @@
                         </td>
                         <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-sm text-center">
                             <button type="button" class="photo-modal-trigger mx-auto">
-                                <img src="{{ asset('storage/' . $kunjungan->foto) }}" alt="Foto Tamu" class="w-10 h-10 object-cover rounded-md transition-transform duration-300 hover:scale-110" data-full-src="{{ asset('storage/' . $kunjungan->foto) }}">
+                                <img src="{{ asset($kunjungan->foto) }}" alt="Foto Tamu" class="w-10 h-10 object-cover rounded-md transition-transform duration-300 hover:scale-110" data-full-src="{{ asset($kunjungan->foto) }}">
                             </button>
                         </td>
                         <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-sm">
@@ -266,6 +275,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalImage = document.getElementById('modalImage');
     const closeImageModalBtn = document.getElementById('closeImageModal');
     const photoTriggers = document.querySelectorAll('.photo-modal-trigger');
+    const filterTypeSelect = document.getElementById('filter_type');
+    const dateFilter = document.getElementById('date-filter');
+    const monthFilter = document.getElementById('month-filter');
+
+    function toggleFilterInputs() {
+        if (filterTypeSelect.value === 'harian') {
+            dateFilter.classList.remove('hidden');
+            monthFilter.classList.add('hidden');
+        } else {
+            dateFilter.classList.add('hidden');
+            monthFilter.classList.remove('hidden');
+        }
+    }
+
+    if (filterTypeSelect) {
+        filterTypeSelect.addEventListener('change', toggleFilterInputs);
+        toggleFilterInputs(); 
+    }
 
     const openModal = (fullSrc) => {
         modalImage.setAttribute('src', fullSrc);
