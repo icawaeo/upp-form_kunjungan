@@ -29,7 +29,7 @@ class RegisterController extends Controller
 
         Auth::login($user); 
 
-        return redirect('/admin/kunjungan');
+        return redirect('/admin/dashboard');
     }
 
     protected function validator(array $data)
