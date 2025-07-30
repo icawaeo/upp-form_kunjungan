@@ -25,7 +25,7 @@ class KunjunganController extends Controller
             'jam_kembali' => 'required',
             'keperluan' => 'required|string|max:255',
             'nomor_kendaraan' => 'required|string|max:20',
-            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048', 
+            'foto' => 'required|image|max:5120',
         ]);
 
         if ($request->hasFile('foto')) {
