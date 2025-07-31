@@ -146,7 +146,7 @@
                     <tr>
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Tanggal</th>
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Nama & Alamat</th>
-                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Jam</th>
+                        <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Jam Datang</th>
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">Keperluan</th>
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">No. Kendaraan</th>
                         <th class="px-2 py-3 sm:p-3 border-b-2 border-gray-200 bg-gray-200 text-left text-[11px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -162,11 +162,12 @@
                         </td>
                         <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm">
                             <p class="text-gray-900 font-bold whitespace-no-wrap">{{ $kunjungan->nama_lengkap }}</p>
+                            <p class="text-gray-700 font-semibold">{{ $kunjungan->instansi }}</p>
                             <p class="text-gray-600">{{ $kunjungan->alamat }}</p>
                         </td>
                         <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm sm:whitespace-nowrap">
-                            <p class="text-gray-800">Datang: {{ \Carbon\Carbon::parse($kunjungan->jam_datang)->format('H:i') }}</p>
-                            <p class="text-gray-800">Pulang: {{ \Carbon\Carbon::parse($kunjungan->jam_kembali)->format('H:i') }}</p>
+                            <p class="text-gray-800">{{ \Carbon\Carbon::parse($kunjungan->jam_datang)->format('H:i') }}</p>
+                            {{-- <p class="text-gray-800">Pulang: {{ \Carbon\Carbon::parse($kunjungan->jam_kembali)->format('H:i') }}</p> --}}
                         </td>
                         <td class="px-2 py-3 sm:p-3 border-b border-gray-200 bg-white text-xs sm:text-sm">
                             <p class="text-gray-900">{{ $kunjungan->keperluan }}</p>

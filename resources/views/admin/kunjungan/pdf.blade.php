@@ -56,6 +56,7 @@
                     <th>No.</th>
                     <th>Tanggal</th>
                     <th>Nama Lengkap</th>
+                    <th>Instansi</th>
                     <th>Alamat</th>
                     <th>Jam Datang</th>
                     <th>Jam Kembali</th>
@@ -69,6 +70,7 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ \Carbon\Carbon::parse($kunjungan->tanggal)->format('d/m/Y') }}</td>
                     <td>{{ $kunjungan->nama_lengkap }}</td>
+                    <td>{{ $kunjungan->instansi }}</td>
                     <td>{{ $kunjungan->alamat }}</td>
                     <td>{{ \Carbon\Carbon::parse($kunjungan->jam_datang)->format('H:i') }}</td>
                     <td>{{ \Carbon\Carbon::parse($kunjungan->jam_kembali)->format('H:i') }}</td>
