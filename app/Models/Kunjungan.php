@@ -12,9 +12,10 @@ class Kunjungan extends Model
     protected $fillable = [
         'tanggal',
         'nama_lengkap',
+        'instansi',
         'alamat',
         'jam_datang',
-        'jam_kembali',
+        // 'jam_kembali',
         'keperluan',
         'nomor_kendaraan',
         'foto',
