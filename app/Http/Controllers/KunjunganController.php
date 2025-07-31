@@ -20,11 +20,12 @@ class KunjunganController extends Controller
         $validatedData = $request->validate([
             'tanggal' => 'required|date',
             'nama_lengkap' => 'required|string|max:255',
+            'instansi' => 'required|string|max:255',
             'alamat' => 'required|string',
             'jam_datang' => 'required',
-            'jam_kembali' => 'required',
+            // 'jam_kembali' => 'required',
             'keperluan' => 'required|string|max:255',
-            'nomor_kendaraan' => 'required|string|max:20',
+            'nomor_kendaraan' => 'nullable|string|max:20',
             'foto' => 'required|image|max:5120',
         ]);
 
