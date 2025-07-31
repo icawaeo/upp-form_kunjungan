@@ -103,41 +103,46 @@
             @csrf
             <div>
                 <label for="tanggal" class="form-label">Tanggal</label>
-                <input type="date" id="tanggal" name="tanggal" class="form-input" required>
+                <input type="text" id="tanggal" name="tanggal" class="form-input bg-gray-200" required readonly>
                 <p class="text-red-500 text-xs mt-1 hidden error-message" id="tanggal-error">Kolom tanggal wajib diisi.</p>
             </div>
             <div>
-                <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
+                <label for="nama_lengkap" class="form-label">Nama Lengkap <span class="text-red-500">*</span></label>
                 <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-input" placeholder="Masukkan nama Anda" required>
                 <p class="text-red-500 text-xs mt-1 hidden error-message" id="nama_lengkap-error">Kolom nama lengkap wajib diisi.</p>
             </div>
             <div>
-                <label for="alamat" class="form-label">Alamat</label>
+                <label for="instansi" class="form-label">Instansi <span class="text-red-500">*</span></label>
+                <input type="text" id="instansi" name="instansi" class="form-input" placeholder="Masukkan nama instansi/perusahaan" required>
+                <p class="text-red-500 text-xs mt-1 hidden error-message" id="instansi-error">Kolom instansi wajib diisi.</p>
+            </div>
+            <div>
+                <label for="alamat" class="form-label">Alamat <span class="text-red-500">*</span></label>
                 <textarea id="alamat" name="alamat" rows="3" class="form-textarea" placeholder="Masukkan alamat Anda" required></textarea>
                 <p class="text-red-500 text-xs mt-1 hidden error-message" id="alamat-error">Kolom alamat wajib diisi.</p>
             </div>
             <div>
-                <label for="jam_datang" class="form-label">Jam Datang</label>
+                <label for="jam_datang" class="form-label">Jam Datang <span class="text-red-500">*</span></label>
                 <input type="time" id="jam_datang" name="jam_datang" class="form-input" required>
                 <p class="text-red-500 text-xs mt-1 hidden error-message" id="jam_datang-error">Kolom jam datang wajib diisi.</p>
             </div>
-            <div>
+            {{-- <div>
                 <label for="jam_kembali" class="form-label">Jam Kembali</label>
                 <input type="time" id="jam_kembali" name="jam_kembali" class="form-input" required>
                 <p class="text-red-500 text-xs mt-1 hidden error-message" id="jam_kembali-error">Kolom jam kembali wajib diisi.</p>
-            </div>
+            </div> --}}
             <div>
-                <label for="keperluan" class="form-label">Keperluan</label>
+                <label for="keperluan" class="form-label">Keperluan <span class="text-red-500">*</span></label>
                 <input type="text" id="keperluan" name="keperluan" class="form-input" placeholder="Jelaskan keperluan Anda" required>
                 <p class="text-red-500 text-xs mt-1 hidden error-message" id="keperluan-error">Kolom keperluan wajib diisi.</p>
             </div>
             <div>
                 <label for="nomor_kendaraan" class="form-label">Nomor Kendaraan</label>
-                <input type="text" id="nomor_kendaraan" name="nomor_kendaraan" class="form-input" placeholder="Contoh: DB 1234 AB" required>
+                <input type="text" id="nomor_kendaraan" name="nomor_kendaraan" class="form-input" placeholder="Contoh: DB 1234 AB">
                 <p class="text-red-500 text-xs mt-1 hidden error-message" id="nomor_kendaraan-error">Kolom nomor kendaraan wajib diisi.</p>
             </div>
             <div>
-                <label for="foto" class="form-label">Upload Foto Anda</label>
+                <label for="foto" class="form-label">Upload Foto Anda <span class="text-red-500">*</span></label>
                 <div class="file-input-wrapper">
                     <label for="foto-upload" class="file-input-button">Unggah Foto</label>
                     <span id="file-chosen" class="file-input-text">Belum ada file dipilih</span>
@@ -158,21 +163,17 @@
         fotoUpload.addEventListener('change', function(){
             if (this.files.length > 0) {
                 fileChosen.textContent = this.files[0].name;
-                // Sembunyikan error jika user memilih file
                 document.getElementById('foto-upload-error').classList.add('hidden');
                 document.querySelector('.file-input-wrapper').classList.remove('input-error');
             }
         });
 
-        // [MODIFIED] Logika validasi baru yang memeriksa setiap kolom
         form.addEventListener('submit', function(event) {
             let isValid = true;
             
-            // Sembunyikan semua pesan error & hapus border merah sebelum validasi ulang
             form.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
             form.querySelectorAll('.form-input, .form-textarea, .file-input-wrapper').forEach(el => el.classList.remove('input-error'));
 
-            // Validasi semua input yang punya atribut 'required'
             const requiredFields = form.querySelectorAll('[required]');
             requiredFields.forEach(field => {
                 const isFile = field.type === 'file';
@@ -183,15 +184,13 @@
                     if (errorElement) {
                         errorElement.classList.remove('hidden');
                     }
-                    // Tambahkan border merah ke input atau wrapper-nya
                     const fieldWrapper = isFile ? field.previousElementSibling : field;
                     fieldWrapper.classList.add('input-error');
                 }
             });
 
             if (!isValid) {
-                event.preventDefault(); // Hentikan pengiriman jika ada error
-                // Scroll ke error pertama yang ditemukan
+                event.preventDefault(); 
                 const firstError = form.querySelector('.input-error');
                 if(firstError) {
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
